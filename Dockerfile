@@ -19,6 +19,23 @@ WORKDIR /opt
 # https://help.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions#user
 USER root
 
+# Adding bugscout appliance cert to jvm
+ARG HOST=sast.bugscout.io
+ARG PORT=443
+ARG KEYSTOREFILE=temporal_keystore
+ARG KEYSTOREPASS=chageme
+
+# get the SSL certificate
+openssl s_client -connect ${HOST}:${PORT} </dev/null \
+    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
+
+# create a keystore and import certificate
+keytool -import -noprompt -trustcacerts \
+    -alias ${HOST} -file ${HOST}.cert \
+    -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
+
+# verify we've got it.
+keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
 # Prepare entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
