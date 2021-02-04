@@ -26,7 +26,7 @@ ARG KEYSTOREFILE=temporal_keystore
 ARG KEYSTOREPASS=chageme
 
 # a) get the SSL certificate
-RUN openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
+RUN /usr/bin/openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
 
 # b) create a keystore and import certificate
 RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias ${HOST} -file ${HOST}.cert -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
