@@ -34,7 +34,7 @@ ARG KEYSTOREPASS=changeme
 RUN /usr/bin/openssl s_client -connect 35.199.111.237:443 </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > test.cert
 
 # b) create a keystore and import certificate
-RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias 35.199.111.237 -file test.cert -keystore temporal_keystore-storepass changeme
+RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias 35.199.111.237 -file test.cert -keystore temporal_keystore -storepass changeme
 
 # c) verify we've got it.
 RUN /opt/java/openjdk/bin/keytool -list -v -keystore temporal_keystore -storepass changeme -alias 35.199.111.237
