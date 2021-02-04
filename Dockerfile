@@ -29,10 +29,10 @@ ARG KEYSTOREPASS=chageme
 RUN openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
 
 # b) create a keystore and import certificate
-RUN keytool -import -noprompt -trustcacerts -alias ${HOST} -file ${HOST}.cert -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
+RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias ${HOST} -file ${HOST}.cert -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
 
 # c) verify we've got it.
-RUN keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
+RUN /opt/java/openjdk/bin/keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
 
 # Prepare entrypoint
 COPY entrypoint.sh /entrypoint.sh
