@@ -19,6 +19,11 @@ WORKDIR /opt
 # https://help.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions#user
 USER root
 
+# installing openssl
+# install openssl
+RUN apk add --update openssl && \
+    rm -rf /var/cache/apk/*
+
 # Adding bugscout appliance cert to jvm
 ARG HOST=sast.bugscout.io
 ARG PORT=443
