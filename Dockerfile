@@ -26,16 +26,13 @@ ARG KEYSTOREFILE=temporal_keystore
 ARG KEYSTOREPASS=chageme
 
 # a) get the SSL certificate
-openssl s_client -connect ${HOST}:${PORT} </dev/null \
-    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
+RUN openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
 
 # b) create a keystore and import certificate
-keytool -import -noprompt -trustcacerts \
-    -alias ${HOST} -file ${HOST}.cert \
-    -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
+RUN keytool -import -noprompt -trustcacerts -alias ${HOST} -file ${HOST}.cert -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
 
 # c) verify we've got it.
-keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
+RUN keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
 
 # Prepare entrypoint
 COPY entrypoint.sh /entrypoint.sh
