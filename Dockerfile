@@ -28,7 +28,7 @@ RUN apk add --update openssl && \
 ARG HOST=sast.bugscout.io
 ARG PORT=443
 ARG KEYSTOREFILE=temporal_keystore
-ARG KEYSTOREPASS=chageme
+ARG KEYSTOREPASS=changeme
 
 # a) get the SSL certificate
 RUN /usr/bin/openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
