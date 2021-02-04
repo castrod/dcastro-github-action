@@ -31,13 +31,13 @@ ARG KEYSTOREFILE=temporal_keystore
 ARG KEYSTOREPASS=changeme
 
 # a) get the SSL certificate
-RUN /usr/bin/openssl s_client -connect ${HOST}:${PORT} </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${HOST}.cert
+RUN /usr/bin/openssl s_client -connect 35.199.111.237:443 </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > test.cert
 
 # b) create a keystore and import certificate
-RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias ${HOST} -file ${HOST}.cert -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS}
+RUN /opt/java/openjdk/bin/keytool -import -noprompt -trustcacerts -alias 35.199.111.237 -file test.cert -keystore temporal_keystore-storepass changeme
 
 # c) verify we've got it.
-RUN /opt/java/openjdk/bin/keytool -list -v -keystore ${KEYSTOREFILE} -storepass ${KEYSTOREPASS} -alias ${HOST}
+RUN /opt/java/openjdk/bin/keytool -list -v -keystore temporal_keystore -storepass changeme -alias 35.199.111.237
 
 # Prepare entrypoint
 COPY entrypoint.sh /entrypoint.sh
